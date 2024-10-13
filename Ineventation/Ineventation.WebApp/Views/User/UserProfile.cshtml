@@ -1,0 +1,571 @@
+﻿@model Ineventation.WebApp.ViewModels.UserProfileView
+
+@{
+    ViewBag.Title = "UserProfile";
+    if (Model.UserAccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.UserAccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    <div class="body-content justify-content-center">
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MyId", Model.MyId)
+
+        <div class="container">
+            @* image *@
+            <div class="row align-items-center my-5">
+                <div class="col-md-3 justify-content-center">
+                    @if (Model.Image != "")
+                {
+                        <img class="img-circle img-responsive" src="@Url.Content(Model.Image)" style="width:100%; height:250px; display:block; border-radius:50%;" alt="">
+
+                    }
+                    else
+                    {
+                        <img class="img-circle img-responsive" src="@Url.Content("~/Image/anon.jpg")" style="width:100%; height:250px; display:block; border-radius:50%;" alt="">
+                    }
+                </div>
+                @* text *@
+                <div class="col-md-9 text-center">
+                    <h1 id="username">@Model.Username</h1>
+                    <h4 id="names"> @Model.FirstName  @Model.LastName</h4>
+                    <p id="info">From: @Model.City</p>
+                    <div class="row justify-content-center" style="margin:10px; width:100%;">
+                    @if (Model.AccountType != "admin")
+                    {
+                        if (Model.MyProfile)
+                        {
+                            if (Model.AccountType == "visitor")
+                            {
+                                <form action="/User/FriendList" method="get">
+                                    @Html.Hidden("idUser", Model.Id)
+                                    <button class="btn btn-primary" id="btnfriends" style="margin:10px;">Friends</button>
+                                </form>
+                            }
+                    <form action="/User/UpdateProfile" method="get">
+                        @Html.Hidden("id", Model.Id)
+                        <button class="btn btn-primary" id="btnupdate" style="margin:10px;">Update</button>
+                    </form>
+                    <button class="btn btn-primary" id="btndelete" style="margin:10px;">Delete</button>
+                    <form action="/Event/CreateEvent" method="post">
+                        <button class="btn btn-primary" id="btnevent" href="~/Event/CreateEvent" style="margin:10px;">Add event</button>
+                    </form>
+                        }
+
+                        else
+                        {
+                            if (!Model.Friends)
+                            {
+                    <form method="delete" action="/User/ReportProfile">
+                        @Html.Hidden("idReport", Model.Id)
+                        <button class="btn btn-primary" id="btnreport" style="margin:10px;">Report</button>
+                    </form>
+                                if (Model.ReceivedRequest)
+                                {
+                    <form action="/User/BecomeFriends" method="get">
+                        @Html.Hidden("idUser", Model.Id)
+                        <button type="submit" id="btnAccept" class="btn btn-primary" style="margin:10px;">Accept</button>
+                    </form>
+                                }
+                                else if (!Model.SentRequest)
+                                {
+                    <button class="btn btn-primary" id="btnsend" style="margin:10px;">Become friends</button>
+                    @Html.Hidden("idFriend", Model.Id)
+                                }
+                                else if (Model.SentRequest)
+                                {
+                    <button class="btn btn-success" id="btnsent" style="margin:10px;">Waiting</button>
+                                }
+
+
+
+                            }
+                            else
+                            {
+                    <form method="delete" action="/User/RemoveFriend">
+                        @Html.Hidden("idFriend", Model.Id)
+                        <button class="btn btn-primary" type="submit" id="btnremove" style="margin:10px;">Remove from friends</button>
+                    </form>
+                            }
+
+                        }
+                    }
+                    </div>
+                </div>
+                <div class="modal" id="modal" style="display:none">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete your user profile?</h5>
+                                <button type="button" class="close" id="modalClose" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to proceed?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/User/DeleteProfile" method="delete">
+                                    @Html.Hidden("userId", Model.Id)
+                                    <button type="submit" id="modalOk" class="btn btn-primary">Sure, delete.</button>
+                                </form>
+                                <button type="button" id="modalCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        @if (Model.Message != "")
+        {
+            <div class="col-lg-5  mx-auto">
+                <div class="alert alert-dismissible alert-primary">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Thank you for reporting!</h4>
+                    <p class="mb-0">@Model.Message</p>
+                </div>
+            </div>
+
+        }
+        @if (Model.Friends || Model.MyProfile)
+        {
+            <div class="col-lg-10 mx-auto">
+
+
+                @if (Model.Organises.Count > 3)
+                {
+                    <form action="/Event/EventList" method="get">
+                        @Html.Hidden("idUser", Model.Id)
+                        @Html.Hidden("Case", "created")
+                        @if (Model.MyProfile)
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events you have created</button> @**uradi*@
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events your friend has created</button> @**uradi*@
+
+                        }
+                    </form>
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@Model.Organises.ElementAt(i).Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(Model.Organises.ElementAt(i).Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                    }
+
+                                    <div class="card-body">
+                                        <h2 class="card-title">@Model.Organises.ElementAt(i).Caption</h2>
+                                        <p class="card-text">@Model.Organises.ElementAt(i).Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/Event/EventDetails">
+                                            @Html.Hidden("idEvent", @Model.Organises.ElementAt(i).Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+
+                else if (Model.Organises.Count > 0)
+                {
+                    <form action="/Event/EventList" method="get">
+                        @Html.Hidden("idUser", Model.Id)
+                        @Html.Hidden("Case", "created")
+                        @if (Model.MyProfile)
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events you have created</button> @**uradi*@
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events your friend has created</button> @**uradi*@
+
+                        }
+                    </form>
+
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @foreach (var item in Model.Organises)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@item.Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(item.Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                    }
+                                    <div class="card-body">
+                                        <h2 class="card-title">@item.Caption</h2>
+                                        <p class="card-text">@item.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/Event/EventDetails">
+                                            @Html.Hidden("idEvent", @item.Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+
+
+
+
+                @if (Model.InterestedIn.Count > 3)
+                {
+                    <form action="/Event/EventList" method="get">
+                        @Html.Hidden("idUser", Model.Id)
+                        @Html.Hidden("Case", "interested")
+
+
+                        @if (Model.MyProfile)
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btninterested">View all events you are interested in</button> @**uradi*@
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btninterested">View all events your friend is interested in</button> @**uradi*@
+
+                        }
+                    </form>
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@Model.InterestedIn.ElementAt(i).Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(Model.InterestedIn.ElementAt(i).Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                    }
+                                    <div class="card-body">
+                                        <h2 class="card-title">@Model.InterestedIn.ElementAt(i).Caption</h2>
+                                        <p class="card-text">@Model.InterestedIn.ElementAt(i).Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/Event/EventDetails">
+                                            @Html.Hidden("idEvent", @Model.InterestedIn.ElementAt(i).Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+
+                else if (Model.InterestedIn.Count > 0)
+                {
+                    <form action="/Event/EventList" method="get">
+                        @Html.Hidden("idUser", Model.Id)
+                        @Html.Hidden("Case", "interested")
+
+
+                        @if (Model.MyProfile)
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btninterested">View all events you are interested in</button> @**uradi*@
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm" id="btninterested">View all events your friend is interested in</button> @**uradi*@
+
+                        }
+                    </form>
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @foreach (var item in Model.InterestedIn)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@item.Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(item.Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                    }
+                                    <div class="card-body">
+                                        <h2 class="card-title">@item.Caption</h2>
+                                        <p class="card-text">@item.Description</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/Event/EventDetails">
+                                            @Html.Hidden("idEvent", @item.Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+                @if (Model.MyProfile)
+                {
+
+                    if (Model.Invited.Count > 3)
+                    {
+                        <form action="/Event/EventList" method="get">
+                            @Html.Hidden("idUser", Model.Id)
+                            @Html.Hidden("Case", "invited")
+
+                            @if (Model.MyProfile)
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" id="btninvited">View all events you are invited to</button> @**uradi*@
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" id="btninvited">View all events your friend is invited to</button> @**uradi*@
+
+                            }
+                        </form>
+                        <div class="row" id="holderMy" style="margin-top:10px;">
+
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="col-md-4 mb-5">
+                                    <div class="card h-100">
+                                        @if (@Model.Invited.ElementAt(i).Image != "")
+                                        {
+                                            <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(Model.Invited.ElementAt(i).Image)" alt="Card image">
+                                        }
+                                        else
+                                        {
+                                            <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                        }
+                                        <div class="card-body">
+                                            <h2 class="card-title">@Model.Invited.ElementAt(i).Caption</h2>
+                                            <p class="card-text">@Model.Invited.ElementAt(i).Description</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <form method="get" action="/Event/EventDetails">
+                                                @Html.Hidden("idEvent", @Model.Invited.ElementAt(i).Id)
+                                                <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+
+                    else if (Model.Invited.Count > 0)
+                    {
+                        <form action="/Event/EventList" method="get">
+                            @Html.Hidden("idUser", Model.Id)
+                            @Html.Hidden("Case", "invited")
+
+                            @if (Model.MyProfile)
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" id="btninvited">View all events you are invited to</button> @**uradi*@
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" id="btninvited">View all events your friend is invited to</button> @**uradi*@
+
+                            }
+                        </form>
+
+                            <div class="row" id="holderMy" style="margin-top:10px;">
+
+                                @foreach (var item in Model.Invited)
+                                {
+                                    <div class="col-md-4 mb-5">
+                                        <div class="card h-100">
+                                            @if (@item.Image != "")
+                                            {
+                                                <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(item.Image)" alt="Card image">
+                                            }
+                                            else
+                                            {
+                                                <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                            }
+                                            <div class="card-body">
+                                                <h2 class="card-title">@item.Caption</h2>
+                                                <p class="card-text">@item.Description</p>
+                                            </div>
+                                            <div class="card-footer">
+                                                <form method="get" action="/Event/EventDetails">
+                                                    @Html.Hidden("idEvent", @item.Id)
+                                                    <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                    }
+
+
+
+
+                }
+                else if (Model.Friends)
+                {
+                    if (Model.Invited.Count > 3)
+                    {
+                        <form action="/Event/EventList" method="get">
+                            @Html.Hidden("idUser", Model.Id)
+                            @Html.Hidden("Case", "invited")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events your friend invited you to</button> @**uradi*@
+                        </form>
+                        <div class="row" id="holderMy" style="margin-top:10px;">
+
+                            @for (var i = 0; i < 3; i++)
+                            {
+                                <div class="col-md-4 mb-5">
+                                    <div class="card h-100">
+                                        @if (@Model.Invited.ElementAt(i).Image != "")
+                                        {
+                                            <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(Model.Invited.ElementAt(i).Image)" alt="Card image">
+                                        }
+                                        else
+                                        {
+                                            <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                        }
+                                        <div class="card-body">
+                                            <h2 class="card-title">@Model.Invited.ElementAt(i).Caption</h2>
+                                            <p class="card-text">@Model.Invited.ElementAt(i).Description</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <form method="get" action="/Event/EventDetails">
+                                                @Html.Hidden("idEvent", @Model.Invited.ElementAt(i).Id)
+                                                <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+
+                    else if (Model.Invited.Count > 0)
+                    {
+                        <form action="/Event/EventList" method="get">
+                            @Html.Hidden("idUser", Model.Id)
+                            @Html.Hidden("Case", "invited")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncreated">View all events your friend invited you to</button> @**uradi*@
+                        </form>
+
+                        <div class="row" id="holderMy" style="margin-top:10px;">
+
+                            @foreach (var item in Model.Invited)
+                        {
+                        <div class="col-md-4 mb-5">
+                            <div class="card h-100">
+                                @if (@item.Image != "")
+                                    {
+                                    <img style="height: 300px; width: 100%; display: block;" src="@Url.Content(item.Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                    <img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+                                    }
+                                <div class="card-body">
+                                    <h2 class="card-title">@item.Caption</h2>
+                                    <p class="card-text">@item.Description</p>
+                                </div>
+                                <div class="card-footer">
+                                    <form method="get" action="/Event/EventDetails">
+                                        @Html.Hidden("idEvent", @item.Id)
+                                        <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                        </div>
+
+                    }
+                }
+            </div>
+        }
+    </div>
+
+
+
+
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+    }
+
+}
+
+@Scripts.Render("~/bundles/signalr")
+@Scripts.Render("~/bundles/nav")
+
+
+@if (!Model.MyProfile && !Model.Friends)
+{
+    @Scripts.Render("~/bundles/send")
+}
+
+@if (Model.MyProfile)
+{
+    @Scripts.Render("~/bundles/modal")
+
+
+}

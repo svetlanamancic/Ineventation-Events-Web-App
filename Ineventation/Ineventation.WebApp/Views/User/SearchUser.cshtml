@@ -1,0 +1,78 @@
+﻿@using PagedList.Mvc
+
+@model Ineventation.WebApp.ViewModels.SearchModel
+@{
+    ViewBag.Title = "SearchUser";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }}
+
+<div class="container">
+    @Html.Hidden("MyId", Model.MyId)
+
+    @Html.AntiForgeryToken()
+    <div class="body-content align-items-center">
+        <div class="col-lg-5 mx-auto" style="width:100%; margin:20px;">
+            <form action="SearchUser" method="get" class="flexContainer">
+                <input type="text" class="form-control" id="Search" name="Search" value="">
+                <button class="btn btn-primary" type="submit"> SEARCH </button>
+            </form>
+        </div>
+
+        @for (int j = 0; j < Model.list.Count; j = j + 3)
+        {
+            <div class="row">
+                @for (int i = j; i < Model.list.Count && i < j + 3; i++)
+                {
+
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            @if (Model.list.ElementAt(i).Image != "")
+                            {
+                                <img style="height: 300px; width: 100%; display: block; border-radius:50%;" src="@Url.Content(Model.list.ElementAt(i).Image)" alt="Card image">
+                            }
+                            else
+                            {
+                                <img style="height: 300px; width: 100%; display: block; border-radius:50%;" alt="Card image" src="@Url.Content("~/Image/anon.jpg")">
+
+                            }
+                            <div class="card-body">
+                                <h2 class="card-title">@Model.list.ElementAt(i).Username</h2>
+                                <p class="card-text">@Model.list.ElementAt(i).FirstName @Model.list.ElementAt(i).LastName</p>
+                            </div>
+                            <div class="card-footer">
+                                <form method="get" action="/User/UserProfile">
+                                    @Html.Hidden("id", @Model.list.ElementAt(i).Id)
+                                    <button type="submit" class="btn btn-primary btn-sm">View profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        }
+
+        <div class="row justify-content-center">
+            @Html.PagedListPager(Model.list, Page_No => Url.Action("SearchUser",
+                new { Page_No, Model.Search }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    UlElementClasses = new string[] { "pagination" }
+                })
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/signalr")
+@Scripts.Render("~/bundles/nav")

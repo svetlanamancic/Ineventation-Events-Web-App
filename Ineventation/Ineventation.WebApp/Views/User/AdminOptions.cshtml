@@ -1,0 +1,103 @@
+﻿@using PagedList.Mvc
+
+@model Ineventation.WebApp.ViewModels.AdminOptionsView
+
+@{
+    ViewBag.Title = "AdminOptions";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }
+}
+<div class="container">
+
+    @Html.Hidden("MyId", Model.MyId)
+
+    <div class="row justify-content-center" style="margin-top:20px;">
+        <button class="btn btn-primary btn-sm" id="btndelete">Add category</button>
+    </div>
+
+
+    <div class="row justify-content-center" style="margin:30px;">
+        <h1>REPORTED USERS</h1>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-primary">
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Username</th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ReportedUsers)
+                    {
+                        <tr>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.Username</td>
+
+                            <form action="/User/UserCompleteProfile" method="get">
+                                <td><input type="hidden" id="idUser" name="idUser" value="@item.Id" /></td>
+                                <td><button class="btn btn-primary btn-sm">View user information</button></td>
+                            </form>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.ReportedUsers, page1 => Url.Action("AdminOptions",
+                    new { page1 }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination" }
+                    })
+            </div>
+
+    </div>
+
+
+    <form action="/User/AddCategory" method="post">
+        <div class="modal" id="modal" style="display:none">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enter category name:</h5>
+                        <button type="button" class="modalClose" id="modalClose" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input class="form-control" id="NewCategory" name="NewCategory" placeholder="..." />
+                        <small class="text-danger" id="error"></small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="add" class="btn btn-primary">Add</button>
+                        <button type="button" id="modalCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@Scripts.Render("~/bundles/signalr")
+
+@Scripts.Render("~/bundles/jqueryval")
+
+@Scripts.Render("~/bundles/nav")
+@Scripts.Render("~/bundles/modal")
+

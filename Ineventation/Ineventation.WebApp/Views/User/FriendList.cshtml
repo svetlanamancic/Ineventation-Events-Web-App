@@ -1,0 +1,96 @@
+﻿@using PagedList.Mvc
+
+@model Ineventation.WebApp.ViewModels.FriendListView
+
+@{
+    ViewBag.Title = "FriendList";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    <div class="container">
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MyId", Model.MyId)
+
+        <div class="bg-dark" id="container" style="margin-top:20px;">
+
+            @for (int j = 0; j < Model.Friends.Count; j = j + 3)
+            {
+                <div class="row">
+                    @for (int i = j; i < Model.Friends.Count && i < j + 3; i++)
+                    {
+
+                        <div class="col-md-4 mb-5">
+                            <div class="card h-100">
+                                @if (Model.Friends.ElementAt(i).Image != "")
+                                {
+                                    <img style="height: 300px; width: 100%; display: block; border-radius:50%;" src="@Url.Content(Model.Friends.ElementAt(i).Image)" alt="Card image">
+                                }
+                                else
+                                {
+                                    <img style="height: 300px; width: 100%; display: block; border-radius:50%;" alt="Card image" src="@Url.Content("~/Image/anon.jpg")">
+
+                                }
+                                <div class="card-body">
+                                    <h2 class="card-title">@Model.Friends.ElementAt(i).Username</h2>
+                                    <p class="card-text">@Model.Friends.ElementAt(i).FirstName @Model.Friends.ElementAt(i).LastName</p>
+                                </div>
+                                <div class="card-footer">
+                                    <form method="get" action="/User/UserProfile">
+                                        @Html.Hidden("id", @Model.Friends.ElementAt(i).Id)
+                                        <button type="submit" class="btn btn-primary btn-sm">View profile</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            }
+
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.Friends, Page_No => Url.Action("FriendList",
+                    new { idUser = Model.Id, Page_No }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination" }
+                    })
+            </div>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger">
+                    <strong> Error </strong> @ViewBag.Message
+                </div>
+            }
+
+
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/nav")
+
+
+@Scripts.Render("~/bundles/signalr")

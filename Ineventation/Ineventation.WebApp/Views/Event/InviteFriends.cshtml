@@ -1,0 +1,89 @@
+﻿@model Ineventation.WebApp.ViewModels.InviteView
+
+@using Ineventation.Data.Models
+
+@{
+    ViewBag.Title = "InviteFriends";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }
+}
+
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    <div class="container">
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MyId", Model.MyId)
+        @Html.Hidden("eventId", Model.EventId)
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">First name</th>
+                    <th scope="col">Last name</th>
+                    <th scope="col"></th>
+                    @* za indeks *@
+                    <th scope="col"></th>
+                    @* za checkbox *@
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (UserModel item in Model.Friends)
+                {
+                    <tr class="table-active">
+                        <td> @item.Username</td>
+                        <td> @item.FirstName</td>
+                        <td> @item.LastName</td>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="@item.Username">
+                                <label class="custom-control-label" for="@item.Username"></label>
+                            </div>
+                        </td>
+                        <td><input type="hidden" class="id" id="idFriend" name="idFriend" value="@item.Id" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="row justify-content-center">
+            <td><button class="btn btn-primary btn-sm" id="invite">Send invitations</button></td>
+        </div>
+    </div>
+
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+    }
+
+}
+@Scripts.Render("~/bundles/nav")
+
+@Scripts.Render("~/bundles/signalr")
+@Scripts.Render("~/bundles/sendInvitations")
+

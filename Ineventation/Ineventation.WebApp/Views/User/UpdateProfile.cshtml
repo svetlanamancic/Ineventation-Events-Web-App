@@ -1,0 +1,149 @@
+﻿@using Ineventation.WebApp.Enums
+
+@model Ineventation.WebApp.ViewModels.UpdateProfileViewModel
+
+@{
+    ViewBag.Title = "Register";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    <div class="body-content row align-items-center">
+        <div class="col-lg-5 mx-auto">
+
+                @using (Html.BeginForm("UpdateProfileInfo", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.Hidden("MyId", Model.MyId)
+
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @id = "firstName" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @id = "lastName" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.User.Email, htmlAttributes: new { @class = "col-form-label text-color" })
+                            @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control", @id = "email" } })
+                            @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.User.Username, htmlAttributes: new { @class = "col-form-label text-color" })
+                            @Html.EditorFor(model => model.User.Username, new { htmlAttributes = new { @class = "form-control", @id = "usernamev" } })
+                            @Html.ValidationMessageFor(model => model.User.Username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.User.Password, htmlAttributes: new { @class = "col-form-label text-color" })
+                            @Html.EditorFor(model => model.User.Password, new { htmlAttributes = new { @class = "form-control", @id = "pass", @placeholder = "Enter password", @type = "password" } })
+                            @Html.ValidationMessageFor(model => model.User.Password, "", htmlAttributes: new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.User.ConfirmPassword, htmlAttributes: new { @class = "col-form-label text-color" })
+                            @Html.EditorFor(model => model.User.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @id = "confirm", @placeholder = "Confirm password", @type = "password" } })
+                            @Html.ValidationMessageFor(model => model.User.ConfirmPassword, "", htmlAttributes: new { @class = "text-danger" })
+                        </div>*@
+
+                    @* dodati deo za dodavanje slike *@
+                    @* takodje ispravi servis koji obradjuje to da se username i email ne bi ponavljali *@
+
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.DropDownListFor(model => model.City, new SelectList(Enum.GetValues(typeof(Cities))), "Select city",
+                        new { @class = "form-control" })
+                    </div>
+
+                    <fieldset class="form-group " style="margin:30px;">
+                        <label class="col-form-label text-color">Choose favorite categories:</label>
+                        <div class="form-check " style="margin-left:50px;">
+                            @foreach (var item in Model.Categories)
+                            {
+                                if (Model.Favorites.Where(x => x.Name == item.Name).ToList().Count > 0)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="form-check-input"
+                                                   name="checkedCategories"
+                                                   value="@item.Name"
+                                                   checked="" /> @item.Name
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="form-check-input"
+                                                       name="checkedCategories"
+                                                       value="@item.Name" /> @item.Name
+                                                </label>
+                                            </div>
+
+                                        }
+                                    }
+                        </div>
+                    </fieldset>
+                    <div class="form-group" style="margin:30px;">
+                        <label for="exampleInputFile">Choose photo:</label>
+                        <input type="file" class="form-control-file" id="Image" name="Image" aria-describedby="fileHelp">
+                        <small id="fileHelp" class="form-text text-muted">Choose profile photo.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row justify-content-center">
+                            @Html.HiddenFor(model => model.Id)
+                            <button type="submit" id="btnupdate" value="Update" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                }
+        </div>
+
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-danger">
+                <strong> Error </strong> @ViewBag.Message
+            </div>
+        }
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/signalr")
+    @Scripts.Render("~/bundles/nav")
+
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+

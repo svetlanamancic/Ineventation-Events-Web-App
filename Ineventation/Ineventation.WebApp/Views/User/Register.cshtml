@@ -1,0 +1,159 @@
+﻿@using Ineventation.WebApp.Enums
+@model Ineventation.WebApp.ViewModels.RegisterModel
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    using (Html.BeginForm("Login", "User"))
+    {
+        @Html.AntiForgeryToken()
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <button class="navbar-toggler" id="toggle-button" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarColor02">
+                    <ul class="navbar-nav ml-auto">
+
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control mr-sm-2", @placeholder = "Username" } })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control mr-sm-2", @placeholder = "Password" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Log In" class="btn btn-secondary" />
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        if (ViewBag.Message != null)
+        {
+            <div class="alert alert-danger">
+                <strong> Error </strong> @ViewBag.Message
+            </div>
+
+        }
+    }
+
+    <div class="body-content row align-items-center">
+        <div class="col-lg-5 mx-auto" style="margin:30px;">
+                @using (Html.BeginForm("CreateProfile", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                    <div class="form-group form-inline" style="margin:30px;">
+                        <div class="custom-control custom-radio" style="margin:5px;">
+                            <input type="radio" id="customRadio1" name="AccountType" class="custom-control-input" value="visitor" checked="">
+                            <label class="custom-control-label" for="customRadio1">Visitor</label>
+                        </div>
+                        <div class="custom-control custom-radio" style="margin:5px;">
+                            <input type="radio" id="customRadio2" name="AccountType" class="custom-control-input" value="promoter">
+                            <label class="custom-control-label" for="customRadio2">Promoter</label>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @id = "firstName", @placeholder = "Enter first name" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", htmlAttributes: new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @id = "lastName", @placeholder = "Enter last name" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", htmlAttributes: new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @id = "email", @placeholder = "Enter email" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", htmlAttributes: new { @class = "text-danger" })
+
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", @id = "username", @placeholder = "Enter username" } })
+                        @Html.ValidationMessageFor(model => model.Username, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @id = "pass", @placeholder = "Enter password", @type = "password" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @id = "confirm", @placeholder = "Confirm password", @type = "password" } })
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", htmlAttributes: new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group" style="margin:30px;">
+                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "col-form-label text-color" })
+                        @Html.DropDownListFor(model => model.City, new SelectList(Enum.GetValues(typeof(Cities))), "Select city",
+                         new { @class = "form-control" })
+
+                    </div>
+
+                    <div class="form-group" style="margin:30px;">
+                        <label for="exampleInputFile" >Choose photo:</label>
+                        <input type="file" class="form-control-file" id="Image" name="Image" aria-describedby="fileHelp">
+                        <small id="fileHelp" class="form-text text-muted">Choose profile photo.</small>
+                    </div>
+
+                    <div class="form-group" style="margin:30px;">
+                        <div class="row justify-content-center">
+                            <button type="submit" id="register" value="Register" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+
+
+
+                    if (ViewBag.Message != null)
+                    {
+                        <div class="alert alert-danger">
+                            <strong> Error </strong> @ViewBag.Message
+                        </div>
+
+                    }
+
+                }
+            </div>
+
+    </div>
+
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/nav")
+

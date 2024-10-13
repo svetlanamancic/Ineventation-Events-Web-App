@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    @Scripts.Render("~/bundles/jquery")
+    <script src="@Url.Content("~/Scripts/jquery.signalR-2.4.1.js")"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <button class="navbar-toggler" id="toggle-button" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav ml-auto">
+                    <li><a class="navbar-brand" href="~/News/ReadNews">News</a></li>
+                    <li><a class="navbar-brand" href="~/Event/Discover">Events</a></li>
+                    <li><a class="navbar-brand" href="~/User/SearchUser">Search</a></li>
+                    <li><a class="navbar-brand" href="~/User/UserProfile">Profile</a></li>
+                    <li>
+                        <form action="/Base/LogOut" method="post">
+                            <button class="btn btn-secondary my-sm-0" id="btnLogout" type="submit">Log Out</button>
+                        </form>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <div style="position: relative; min-height: 300px;">
+            <div  style="position: absolute; top: 20px; right: 20px;">
+                <div class="toast fade show" style="display:none;" id="toast">
+                    <div class="toast-header">
+                        <strong class="mr-auto"><i class="fa fa-globe"></i> News!!!</strong>
+                        <small class="text-muted">just now</small>
+                        <button type="button" class="ml-2 mb-1 close" id="toastClose" data-dismiss="toast">&times;</button>
+                    </div>
+                    <div class="toast-body">
+                        You have news! Go and see!
+                    </div>
+                </div>
+            </div>
+
+
+        @RenderBody()
+    </div>
+
+    <hr />
+    <footer></footer>
+    @RenderSection("scripts", required: false)
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+
+</body>
+</html>

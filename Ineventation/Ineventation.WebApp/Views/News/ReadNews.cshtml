@@ -1,0 +1,136 @@
+﻿@model Ineventation.WebApp.ViewModels.NewsViewModel
+
+@using Ineventation.Data.Models
+
+@{
+    ViewBag.Title = "News";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }
+}
+
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+
+    @Html.AntiForgeryToken()
+    @Html.Hidden("MyId", Model.MyId)
+
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        @*<form action="/News/Delete" method="get">
+                                <button class="btn btn-primary btn-sm">Delete all news</button>
+                            </form>*@
+                    </th>
+                    <form action="/News/ReadNews" method="get">
+
+                        <th scope="col">
+                            @Html.DropDownList("filter", new List<SelectListItem>
+                                  {
+                                      new SelectListItem() {Text = "Select", Value="Select filter"},
+                                      new SelectListItem() {Text = "Invites", Value="invite"},
+                                      new SelectListItem() {Text = "Friend requests", Value="request"}
+                                  }, new { @class = "form-control form-control-sm" })
+                        </th>
+
+                        <th scope="col">
+
+                            <button class="btn btn-primary btn-sm">Filter</button>
+                        </th>
+                    </form>
+
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (NewsModel item in Model.list)
+                {
+                    if (item.Status == "read")
+                    {
+                        <tr class="table-dark">
+                            <td> @item.Message</td>
+                            <td> @item.Time</td>
+
+
+                            @if (item.Type == "invite")
+                            {
+                                <form action="/Event/EventDetails" method="get">
+                                    <td><input type="hidden" id="idEvent" name="idEvent" value="@item.IdObject" /></td>
+                                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                                </form>
+                            }
+                            else
+                            {
+                                <form action="/User/UserProfile" method="get">
+                                    <td><input type="hidden" id="id" name="id" value="@item.IdObject" /></td>
+                                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                                </form>
+
+                            }
+
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="table-primary">
+                            <td> @item.Message</td>
+                            <td> @item.Time</td>
+
+                            @if (item.Type == "invite")
+                            {
+                                <form action="/Event/EventDetails" method="get">
+                                    <td><input type="hidden" id="idEvent" name="idEvent" value="@item.IdObject" /></td>
+                                    <td><button class="btn btn-primary btn-sm">View</button></td>
+                                </form>
+                            }
+                            else
+                            {
+                                <form action="/User/UserProfile" method="get">
+                                    <td><input type="hidden" id="id" name="id" value="@item.IdObject" /></td>
+                                    <td><button class="btn btn-secondary btn-sm">View</button></td>
+                                </form>
+
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+    }
+
+}
+@Scripts.Render("~/bundles/signalr")
+@Scripts.Render("~/bundles/nav")
+

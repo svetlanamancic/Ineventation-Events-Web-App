@@ -1,0 +1,127 @@
+﻿
+@using Ineventation.WebApp.Enums
+@using PagedList.Mvc;
+@model Ineventation.WebApp.ViewModels.DiscoverViewModel
+@{
+	ViewBag.Title = "Discover";
+	if (Model.AccountType == "promoter")
+	{
+		Layout = "~/Views/Shared/SignedIn.cshtml";
+	}
+	else if (Model.AccountType == "visitor")
+	{
+		Layout = "~/Views/Shared/_Visitor.cshtml";
+	}
+	else
+	{
+		Layout = "~/Views/Shared/_Admin.cshtml";
+	}
+}
+
+<div class="body-content align-items-center">
+
+	@Html.AntiForgeryToken()
+	@Html.Hidden("MyId", Model.MyId)
+
+
+	<div class="col-lg-10 mx-auto" style="margin:30px;">
+		<form method="get" action="Discover">
+
+			<div class="row">
+				<div class="col-md-4 text-left">
+					<div class="form-group">
+						<div class="form-group">
+
+							@Html.Label("Choose city:", htmlAttributes: new { @class = "col-form-label text-color" })
+							@Html.DropDownListFor(model => model.City, new SelectList(Enum.GetValues(typeof(Cities))), "Select city",
+							new { @class = "form-control" })
+						</div>
+					</div>
+
+
+				</div>
+
+				<div class="col-md-4 text-left">
+					@Html.Label("Choose date and time:", htmlAttributes: new { @class = "col-form-label text-color" })
+					<div class="flexContainer">
+						<input type="text" class="form-control inputField" id="DateAndTime" name="DateAndTime" value="Select date" />
+						<button class="btn btn-outline-secondary picker1"> SHOW </button>
+						@*<div class="flexContainer">
+								<input type="password" class="inputField">
+								<button type="submit"><img src="arrow.png" alt="Arrow Icon"></button>
+							</div>*@
+
+					</div>
+				</div>
+
+				<div class="col-md-4  text-left">
+					<div class="form-group">
+						@Html.Label("Choose event type:", htmlAttributes: new { @class = "col-form-label text-color" })
+						@Html.DropDownListFor(model => model.SelectedCategory, new SelectList(Model.Categories), "Select event type",
+						new { @class = "form-control" })
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center" style="margin:30px;">
+				@Html.Hidden("Tag", "search")
+				<button type="submit" class="btn btn-primary">Search</button>
+			</div>
+		</form>
+
+	</div>
+
+	<div class="col-lg-10 mx-auto" style="margin:30px;">
+		@for (int j = 0; j < Model.list.Count; j = j + 3)
+		{
+			<div class="row">
+				@for (int i = j; i < Model.list.Count && i < j + 3; i++)
+				{
+
+					<div class="col-md-4 mb-5">
+						<div class="card h-100">
+							@if (Model.list.ElementAt(i).Image != "")
+					{
+								<img style="height: 300px; width: 100%; display: block;" src="@Url.Content(Model.list.ElementAt(i).Image)" alt="Card image">
+							}
+							else
+							{
+								<img style="height: 300px; width: 100%; display: block;" src="@Url.Content("~/Image/event.png")" alt="Card image">
+
+							}
+							<div class="card-body">
+								<h2 class="card-title">@Model.list.ElementAt(i).Caption</h2>
+								<p class="card-text">@Model.list.ElementAt(i).Description</p>
+							</div>
+							<div class="card-footer">
+								<form method="get" action="/Event/EventDetails">
+									@Html.Hidden("idEvent", @Model.list.ElementAt(i).Id)
+									<button type="submit" class="btn btn-primary btn-sm">More details</button>
+								</form>
+							</div>
+						</div>
+					</div>
+
+				}
+			</div>
+		}
+
+		<div class="row justify-content-center">
+			@Html.PagedListPager(Model.list, Page_No => Url.Action("Discover",
+				new { id = "id", Page_No }),
+				new PagedListRenderOptions
+					 {
+					LiElementClasses = new string[] { "page-item" },
+					UlElementClasses = new string[] { "pagination pagination-sm" }
+				})
+		</div>
+	</div>
+</div>
+</div>
+
+@section Scripts {
+	@Scripts.Render("~/bundles/nav")
+
+	@Scripts.Render("~/bundles/signalr")
+
+	@Scripts.Render("~/bundles/datepicker")
+}

@@ -1,0 +1,262 @@
+﻿@using PagedList.Mvc
+
+@model Ineventation.WebApp.ViewModels.UserCompleteProfileView
+
+@{
+    ViewBag.Title = "UserCompleteProfile";
+    if (Model.UserAccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.UserAccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+
+
+    <div class="body-content justify-content-center">
+        @Html.Hidden("MyId", Model.MyId)
+
+        @Html.AntiForgeryToken()
+        <div class="col-lg-10 mx-auto" style="margin:10px;">
+            <div class="row justify-content-center align-content-center" style="margin:10px;">
+                <div class="col-sm-3">
+                    @if (Model.Image != "")
+                    {
+                        <img style="height: 250px; width: 100%;  display: block; border-radius:50%;" src="@Url.Content(Model.Image)" alt="Card image">
+                    }
+                    else
+                    {
+                        <img style="height: 250px; width: 100%; display: block; border-radius:50%;"  alt="Card image" src="@Url.Content("~/Image/anon.jpg")">
+
+                    }
+                </div>
+
+            </div>
+                <div class="col-lg-6 mx-auto justify-content-center text-center">
+                    <h1>Basic INFO</h1>
+                    <h4> First name: @Model.FirstName</h4>
+                    <h4> Last name: @Model.LastName</h4>
+                    <h4> Username: @Model.Username</h4>
+                    <h4> Number of reports: @Model.NumberOfReports</h4>
+                    <h6>City: @Model.City</h6>
+                    <h6>Account type: @Model.AccountType</h6>
+
+                    <button class="btn btn-primary btn-sm" id="btndelete" style="margin:10px;">Delete profile</button>
+
+                    <div class="modal" id="modal" style="display:none; margin-top:50px;">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete user profile?</h5>
+                                    <button type="button" class="close" id="modalClose" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to proceed?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="/User/DeleteProfile" method="delete">
+                                        @Html.Hidden("userId", Model.Id)
+                                        <button type="submit" id="modalOk" class="btn btn-primary">Sure, delete.</button>
+                                    </form>
+                                    <button type="button" id="modalCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @if (Model.Organises.Count > 0)
+        {
+
+            <div class="row justify-content-center bg-dark " style="padding:10px;">
+                <h1> Events user is organising</h1>
+            </div>
+            <div class="row justify-content-center  bg-dark jumbotron" style="padding:10px;">
+                <div class="col-auto">
+
+                    <table class="table table-hover table-responsive-lg">
+                        <thead>
+                            <tr class="table-dark">
+                                <td>Caption</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Organises)
+                            {
+                                <tr>
+                                    <td>@item.Caption</td>
+                                    <form method="get" action="~/Event/EventDetails">
+                                        <td> @Html.Hidden("idEvent", @item.Id)</td>
+                                        <td><button type="submit" class="btn btn-sm btn-primary">Details</button></td>
+                                    </form>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.Organises, pageO => Url.Action("UserCompleteProfile",
+                    new { idUser = Model.Id, pageO = pageO }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination" }
+                    })
+            </div>
+
+        }
+
+
+        @if (Model.InterestedIn.Count > 0)
+        {
+
+            <div class="row justify-content-center" style="padding:10px;">
+                <h1> Events user is interested in</h1>
+            </div>
+            <div class="row justify-content-center" style="padding:10px;">
+                <div class="col-auto">
+
+                    <table class="table table-hover table-responsive-lg">
+                        <thead>
+                            <tr class="table-dark">
+                                <td>Caption</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.InterestedIn)
+                            {
+                                <tr>
+                                    <td>@item.Caption</td>
+                                    <form method="get" action="~/Event/EventDetails">
+                                        <td> @Html.Hidden("idEvent", @item.Id)</td>
+                                        <td><button type="submit" class="btn btn-sm btn-primary">Details</button></td>
+                                    </form>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.InterestedIn, pageI => Url.Action("UserCompleteProfile",
+                    new { idUser = Model.Id, pageI = pageI }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination" }
+                    })
+            </div>
+
+
+        }
+
+        @if (Model.Likes.Count > 0)
+        {
+
+
+
+        }
+
+        @if (Model.Friends.Count > 0)
+        {
+
+            <div class="row justify-content-center " style="padding:10px;">
+                <h1> Friends</h1>
+            </div>
+            <div class="row justify-content-center" style="padding:10px;">
+                <div class="col-auto">
+
+                    <table class="table table-hover table-responsive-lg">
+                        <thead>
+                            <tr class="table-dark">
+                                <td>First name</td>
+                                <td>Last name</td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Friends)
+                            {
+                                <tr>
+                                    <td>@item.FirstName</td>
+                                    <td>@item.LastName</td>
+
+                                    <form method="get" action="/User/UserProfile">
+                                        <td> @Html.Hidden("id", @item.Id)</td>
+                                        <td><button type="submit" class="btn btn-sm btn-primary">Details</button></td>
+                                    </form>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.Friends, pageF => Url.Action("UserCompleteProfile",
+                    new { idUser = Model.Id, pageF = pageF }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination" }
+                    })
+            </div>
+
+
+        }
+
+
+    </div>
+
+
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+    }
+
+}
+@Scripts.Render("~/bundles/signalr")
+@Scripts.Render("~/bundles/nav")
+@Scripts.Render("~/bundles/modal")
+
+
+
+
+
+

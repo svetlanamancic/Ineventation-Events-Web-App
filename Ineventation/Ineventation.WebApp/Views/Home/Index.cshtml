@@ -1,0 +1,226 @@
+﻿
+@model  Ineventation.WebApp.ViewModels.LoginModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@using (Html.BeginForm("Login", "User"))
+{
+    @Html.AntiForgeryToken()
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <div class="container">
+            <button class="navbar-toggler" id="toggle-button" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav ml-auto">
+
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control mr-sm-2 prettyFont", @placeholder = "Username" } })
+                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger prettyFont" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control mr-sm-2 prettyFont", @placeholder = "Password" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger prettyFont" })
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Log In" class="btn btn-primary prettyFont" />
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+
+    }
+}
+
+<div class="body-content align-items-center bg-light">
+    <header class="masthead back" style="width:100%; height:600px;">
+
+        <div class="overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-lg-8 mx-auto">
+                        <div class="site-heading">
+                            <h1 class="text-center">InEVENTation</h1>
+                            <span class="subheading">Life is an event. Make it memorable.</span>
+                            <button class="btn btn-primary register prettyFont" id="registerbtn">Register</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="article-list">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center prettyFont">About</h2>
+                <p class="text-center">
+                    Want to plan your free time, but have no idea what to do?
+                </p>
+
+                <p class="text-center">
+                    Organising an event and need an easy way to invite a lot of people?
+                </p>
+
+                <p class="text-center">
+                    Use InEVENTation web app to find different types of events near you.
+                </p>
+            </div>
+            @*<div class="row articles">
+                <div class="col-sm-6 col-md-4 item">
+                    <h1 class="text-center prettyFont">@Model.eventNo+ </h1>
+                    <h3 class="text-center prettyFont">EVENTS </h3>
+
+                    <p class="description"></p>
+                </div>
+                <div class="col-sm-6 col-md-4 item">
+                    <h1 class="text-center prettyFont">@Model.userNo+ </h1>
+                    <h3 class="text-center prettyFont">USERS </h3>
+
+                    <p class="description"></p>
+                </div>
+                <div class="col-sm-6 col-md-4 item">
+                    <h1 class="text-center prettyFont">@Model.categoryNo+ </h1>
+                    <h3 class="text-center prettyFont">CATEGORIES </h3>
+
+                    <p class="description"></p>
+                </div>
+            </div>*@
+        </div>
+    </div>
+    <div class="masthead back2" style="width:100%; height:500px; margin-top:50px; margin-bottom:100px; position:relative;">
+        <div class="overlay2">
+            <div class="container">
+                <div class="row">
+                    @*<div class="col-md-10 col-lg-8 mx-auto">*@
+                        <div class="row articles">
+                            <div class="col-sm-6 col-md-4 item">
+                                <h1 class="text-center prettyFont">@Model.eventNo+ </h1>
+                                <h3 class="text-center prettyFont">EVENTS </h3>
+
+                                <h4 class="description text-center">Over @Model.eventNo have been added by our promoters and are waiting just for you. All you have to do is register and you can browse for events you might like to visit.</h4>
+                            </div>
+                            <div class="col-sm-6 col-md-4 item">
+                                <h1 class="text-center prettyFont">@Model.userNo+ </h1>
+                                <h3 class="text-center prettyFont">USERS </h3>
+
+                                <h4 class="description text-center">Over @Model.userNo people are using InEVENTation. Hurry up and join your friends so you can plan your spare time togather.</h4>
+                            </div>
+                            <div class="col-sm-6 col-md-4 item">
+                                <h1 class="text-center prettyFont">@Model.categoryNo+ </h1>
+                                <h3 class="text-center prettyFont">CATEGORIES </h3>
+
+                                <h4 class="description text-center">Over @Model.categoryNo types of events are available and we bet you'll find at least one them to be your favourite. If you want to see what we have to offer, all you need to do is register.</h4>
+                            </div>
+                        </div>
+                        @*<div class="site-heading">
+                            <h1 class="text-center">InEVENTation</h1>
+                            <span class="subheading">Life is an event. Make it memorable.</span>
+
+                        </div>*@
+                    @*</div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="testimonials-clean">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center prettyFont">Motivational quotes for our users</h2>
+                <p class="text-center"></p>
+            </div>
+            <div class="row people">
+                <div class="col-md-6 col-lg-4 item">
+                    <div class="box">
+                        <p class="description">“The only way to do great work is to love what you do.”</p>
+                    </div>
+                    <div class="author">
+                        <h5 class="name">Steve Jobs</h5>
+                        <p class="title">Co-founder, Chairman, and CEO of Apple Inc.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 item">
+                    <div class="box">
+                        <p class="description">“A man who does not plan long ahead will find trouble at his door.”</p>
+                    </div>
+                    <div class="author">
+                        <h5 class="name">Confucius</h5>
+                        <p class="title">Chinese philosopher and politician</p> 
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 item">
+                    <div class="box">
+                        <p class="description">“Whatever you do, do it well. Do it so well that when people see you do it they will want to come back and see you do it again and they will want to bring others and show them how well you do what you do.”</p>
+                    </div>
+                    <div class="author">
+                        <h5 class="name">Walt Disney</h5>
+                        <p class="title">Co-founder of The Walt Disney Company</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="map-clean">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center prettyFont">Location</h2>
+                <p class="text-center">You can find us at given location.</p>
+            </div>
+        </div><iframe allowfullscreen="" frameborder="0" src="https://maps.google.com/maps?width=200&amp;height=100&amp;hl=en&amp;q=elektronski%20fakultet%20nis+()&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" style="width:100%; height:500px;"></iframe>
+    </div>
+
+    <div class="footer-basic bg-light">
+        <footer class="text-center">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr class="border-0">
+
+                        <th style="color:#375a7f">
+                            Email
+                        </th>
+                        <th style="color:#375a7f">
+                            Address
+                        </th>
+                    </tr>
+                    <tr>
+
+                        <th style="color:#375a7f">
+                            svetlanamancic@elfak.rs
+                        </th>
+                        <th style="color:#375a7f">
+                            Aleksandra Medvedeva 14, 18000 Nis
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+
+        </footer>
+    </div>
+
+</div>
+
+@Scripts.Render("~/bundles/nav")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/index")

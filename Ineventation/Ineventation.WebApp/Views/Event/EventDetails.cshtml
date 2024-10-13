@@ -1,0 +1,350 @@
+﻿@model Ineventation.WebApp.ViewModels.EventDetailsViewModel
+
+@{
+    ViewBag.Title = "EventDetails";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }
+}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+
+    <div class="body-content justify-content-center">
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MyId", Model.MyId)
+        @Html.Hidden("Location", Model.Location)
+
+
+        <div class="map-clean" style="margin-top:50px; margin-bottom:30px;">
+            <div class="container">
+                <div class="intro text-center" style="color:white;">
+                    <h2 class="text-center">@Model.Caption</h2>
+                    <p class="text-center">@Model.Location, @Model.City</p>
+                    <p id="info">About: @Model.Description</p>
+                    <p id="date">Date and time: @Model.Date, @Model.Time</p>
+                    <p>Created by: @Model.CreatedBy</p>
+@if (Model.AccountType != "admin")
+{
+                    <div class="row justify-content-center" style="margin:30px;">
+
+
+                                @if (!Model.MyEvent)
+                                {
+                                    <div class="row justify-content-center" style="margin:10px;">
+                                        @if (Model.Visibility == "Public")
+                                        {
+                                            <form method="post" action="/User/Interested">
+                                                @if (Model.Interested)
+                                                {
+
+                                                    @Html.HiddenFor(model => model.Id)
+                                                    @Html.HiddenFor(model => model.Interested)
+
+                                                    <button type="submit" class="btn btn-success" id="btninterested" style="margin:10px;">Interested!</button>
+
+                                                }
+
+
+                                            </form>
+
+                                            <form method="post" action="/User/Interested">
+                                                @if (!Model.Interested)
+                                                {
+
+                                                    @Html.HiddenFor(model => model.Id)
+                                                    @Html.HiddenFor(model => model.Interested)
+
+                                                    <button type="submit" class="btn btn-primary" id="btninterested" style="margin:10px;">Interested?</button>
+
+                                                }
+
+                                            </form>
+                                        }
+                                        else if (Model.Invited)
+                                        {
+                                            <form method="post" action="/User/Going">
+                                                @Html.HiddenFor(model => model.Id)
+                                                @Html.HiddenFor(model => model.Going)
+                                                @if (Model.Going)
+                                                {
+                                                    <button type="submit" class="btn btn-success" id="btngoing" style="margin:10px;">Going!</button>
+
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn btn-primary" id="btngoing" style="margin:10px;">Going?</button>
+                                                }
+
+
+                                            </form>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row justify-content-center" style="margin:10px;">
+
+                                        <form method="post" action="/Event/UpdateEvent">
+                                            @Html.HiddenFor(model => model.Id)
+                                            <button class="btn btn-primary" id="btnupdate" style="margin:10px;">Update event</button>
+                                        </form>
+                                        <button class="btn btn-primary" id="btndelete" style="margin:10px;">Delete event</button>
+                                    @if (Model.Visibility != "Public")
+                                    {
+                                       <form action="/Event/InviteFriends" method="get">
+                                            @Html.Hidden("idEvent", Model.Id)
+                                            <button class="btn btn-primary" id="btninvite" style="margin:10px;">Invite friends</button>
+                                        </form>
+
+                                    }
+                                    </div>
+
+                                    <div class="modal" id="modal" style="display:none">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Delete event?</h5>
+                                                    <button type="button" class="close" id="modalClose" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to proceed?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="/Event/DeleteEvent" method="delete">
+                                                        @Html.Hidden("MyId", Model.MyId)
+                                                        @Html.Hidden("Id", Model.Id)
+                                                        <button type="submit" id="modalOk" class="btn btn-primary">Sure, delete.</button>
+                                                    </form>
+                                                    <button type="button" id="modalCancel" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+
+                        
+
+                    </div>
+}
+                </div>
+            </div><div id="map" style="height:300px; width:100%;">
+            </div>
+        </div>
+
+        
+
+        @if (Model.Invited || Model.Visibility == "Public" || Model.MyEvent)
+        {
+            <div class="col-lg-10 mx-auto" style="margin:30px;">
+
+
+                @if (Model.list.Count > 3)
+                {
+                    <form action="/User/FriendList" method="get">
+                        @Html.Hidden("idUser", Model.MyId)
+                        @Html.Hidden("idEvent", Model.Id)
+                        @if (Model.Invited || Model.MyEvent)
+                        {
+                            @Html.Hidden("Case", "invited")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncoming">View all friends who are coming</button>
+                        }
+                        else if (Model.Visibility == "Public")
+                        {
+                            @Html.Hidden("Case", "Public")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btnfriends">View all friends who are interested</button>
+                        }
+
+
+                    </form>
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @for (var i = 0; i < 3; i++)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@Model.list.ElementAt(i).Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block; border-radius:50%;" src="@Url.Content(Model.list.ElementAt(i).Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block; border-radius:50%;" src="@Url.Content("~/Image/anon.jpg")" alt="Card image">
+
+                                    }
+
+                                    <div class="card-body">
+                                        <h2 class="card-title">@Model.list.ElementAt(i).Username</h2>
+                                        <p class="card-text">@Model.list.ElementAt(i).FirstName @Model.list.ElementAt(i).LastName</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/User/UserProfile">
+                                            @Html.Hidden("id", @Model.list.ElementAt(i).Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">View profile</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+
+                else if (Model.list.Count > 0)
+                {
+                    <form action="/User/FriendList" method="get">
+                        @Html.Hidden("idUser", Model.MyId)
+                        @Html.Hidden("idEvent", Model.Id)
+
+                        @if (Model.Invited || Model.MyEvent)
+                        {
+                            @Html.Hidden("Case", "invited")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btncoming">View all friends who are coming</button>
+                        }
+                        else if (Model.Visibility == "Public")
+                        {
+                            @Html.Hidden("Case", "Public")
+
+                            <button type="submit" class="btn btn-primary btn-sm" id="btnfriends">View all friends who are interested</button>
+                        }
+                    </form>
+
+                    <div class="row" id="holderMy" style="margin-top:10px;">
+
+                        @foreach (var item in Model.list)
+                        {
+                            <div class="col-md-4 mb-5">
+                                <div class="card h-100">
+                                    @if (@item.Image != "")
+                                    {
+                                        <img style="height: 300px; width: 100%; display: block; border-radius:50%;" src="@Url.Content(item.Image)" alt="Card image">
+                                    }
+                                    else
+                                    {
+                                        <img style="height: 300px; width: 100%; display:block; border-radius:50%;" src="@Url.Content("~/Image/anon.jpg")" alt="Card image">
+
+                                    }
+                                    <div class="card-body">
+                                        <h2 class="card-title">@item.Username</h2>
+                                        <p class="card-text">@item.FirstName @item.LastName</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form method="get" action="/User/UserProfile">
+                                            @Html.Hidden("id", @item.Id)
+                                            <button type="submit" class="btn btn-primary btn-sm">View profile</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+            </div>
+        }
+    </div>
+
+
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong> Error </strong> @ViewBag.Message
+        </div>
+    }
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/nav")
+    @Scripts.Render("~/bundles/modal")
+    @Scripts.Render("~/bundles/signalr")
+
+
+
+    <script>
+
+
+
+        var geocode = function () {
+            var geocoder = new google.maps.Geocoder();
+            var address = document.getElementById('Location').value;
+            console.log(address);
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                params: {
+                    address: address,
+                    key: 'AIzaSyBzDvV8lc4g4XVi8xPZHzCsZ4jfjUUONVU'
+                }
+            })
+            .then(function (response) {
+
+                var lat = response.data.results[0].geometry.location.lat;
+                var lng = response.data.results[0].geometry.location.lng;
+
+                var options = {
+                    zoom: 17,
+                    center: { lat: lat, lng: lng },
+
+                }
+                console.log(lat);
+
+                var map = new google.maps.Map(document.getElementById('map'), options);
+
+                var marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map
+                });
+
+                document.getElementById('lat').value = lat;
+                document.getElementById('lng').value = lng;
+
+            })
+            .catch(function (error) {
+            });
+
+        }
+        function initMap() {
+            var options = {
+                zoom: 17,
+                center: { lat: 43.32472, lng: 21.90333 },
+
+            }
+            var map = new google.maps.Map(document.getElementById('map'), options);
+            var marker = new google.maps.Marker({
+                position: { lat: 43.32472, lng: 21.90333 },
+                map: map
+            });
+            geocode();
+
+        };
+    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzDvV8lc4g4XVi8xPZHzCsZ4jfjUUONVU&callback=initMap"
+            type="text/javascript"></script>
+}
+
+

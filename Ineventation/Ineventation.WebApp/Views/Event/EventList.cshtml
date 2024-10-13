@@ -1,0 +1,99 @@
+﻿@using PagedList.Mvc
+
+@model Ineventation.WebApp.ViewModels.EventListView
+
+@{
+    ViewBag.Title = "EventList";
+    if (Model.AccountType == "promoter")
+    {
+        Layout = "~/Views/Shared/SignedIn.cshtml";
+    }
+    else if (Model.AccountType == "visitor")
+    {
+        Layout = "~/Views/Shared/_Visitor.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Admin.cshtml";
+    }
+}
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong> Success </strong> @ViewBag.Message
+        </div>
+    }
+}
+else
+{
+
+    <div class="container">
+
+        @Html.AntiForgeryToken()
+        @Html.Hidden("MyId", Model.MyId)
+
+
+        <div  id="container" style="margin-top:20px;">
+
+            @for (int j = 0; j < Model.Events.Count; j = j + 3)
+            {
+                <div class="row">
+                    @for (int i = j; i < Model.Events.Count && i < j + 3; i++)
+                    {
+
+                        <div class="col-md-4 mb-5">
+                            <div class="card h-100">
+                                @if (Model.Events.ElementAt(i).Image != "")
+                                {
+                                    <img class="img-fluid mb-4 mb-lg-0" src="@Url.Content(Model.Events.ElementAt(i).Image)" style="width:100%; height:300px; display:block;" alt="">
+
+                                }
+                                else
+                                {
+                                    <img class="img-fluid mb-4 mb-lg-0" src="@Url.Content("~/Image/event.png")" style="width:100%; height:300px; display:block;" alt="">
+                                }
+                                <div class="card-body">
+                                    <h2 class="card-title">@Model.Events.ElementAt(i).Caption</h2>
+                                    <p class="card-text">@Model.Events.ElementAt(i).Description</p>
+                                </div>
+                                <div class="card-footer">
+                                    <form method="get" action="/Event/EventDetails">
+                                        @Html.Hidden("idEvent", @Model.Events.ElementAt(i).Id)
+                                        <button type="submit" class="btn btn-primary btn-sm">More details</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            }
+
+            <div class="row justify-content-center">
+                @Html.PagedListPager(Model.Events, Page_No => Url.Action("EventList",
+                    new { idUser = Model.Id, Page_No, Case = Model.Case }),
+                    new PagedListRenderOptions
+                         {
+                        LiElementClasses = new string[] { "page-item" },
+                        UlElementClasses = new string[] { "pagination pagination-sm" }
+                    })
+            </div>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger">
+                    <strong> Error </strong> @ViewBag.Message
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/nav")
+
+@Scripts.Render("~/bundles/signalr")

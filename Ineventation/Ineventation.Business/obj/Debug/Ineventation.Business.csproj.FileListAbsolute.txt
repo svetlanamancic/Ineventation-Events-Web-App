@@ -1,0 +1,32 @@
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.exe.config
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.exe
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.pdb
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Data.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Neo4j.Driver.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Data.pdb
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Data.dll.config
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Neo4j.Driver.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.pdb
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.csprojAssemblyReference.cache
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.csproj.CopyComplete
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.exe
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.exe.config
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.exe
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Business.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Data.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Neo4j.Driver.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Newtonsoft.Json.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Ineventation.Data.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Neo4j.Driver.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Neo4jClient.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\bin\Debug\Newtonsoft.Json.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.exe
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Business\obj\Debug\Ineventation.Business.csprojResolveAssemblyReference.cache

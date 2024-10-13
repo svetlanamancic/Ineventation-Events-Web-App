@@ -1,0 +1,27 @@
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.dll.config
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.pdb
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Neo4j.Driver.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Neo4j.Driver.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.pdb
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.csprojAssemblyReference.cache
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.csproj.CopyComplete
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.dll
+C:\Users\Svetlana\Documents\Visual Studio 2019\Projects\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.dll.config
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Ineventation.Data.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Neo4j.Driver.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Newtonsoft.Json.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Neo4j.Driver.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Neo4jClient.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\bin\Debug\Newtonsoft.Json.xml
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.dll
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.pdb
+D:\swe 2020\Aplikacija\Ineventation\Ineventation.Data\obj\Debug\Ineventation.Data.csprojResolveAssemblyReference.cache
